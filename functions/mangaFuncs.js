@@ -100,13 +100,18 @@ class Manga {
         if (!fs.existsSync(path.join(this.scansPath, mangaNameFolder))) { fs.mkdirSync(path.join(this.scansPath, mangaNameFolder)) }
         if (!fs.existsSync(path.join(this.scansPath, mangaNameFolder, chapter.chapterIndex))) { fs.mkdirSync(path.join(this.scansPath, mangaNameFolder, chapter.chapterIndex)) }
         
-        for (let i = 0; i < chapter.scansUrls.length; i++) {
-            let url = chapter.scansUrls[i];
+        
+
+        for (let i = 1; i <= chapter.scansUrls.length; i++) {
+            
             await new Promise((resolve) => {
                 setTimeout(() => {
+                    let url = chapter.scansUrls[i-1];
 
                     https.get(url, res => {
                         if (res.statusCode === 200) {
+                            let startTs = new Date().getTime() / 1000;
+                            
                             let imageData = '';
                             res.setEncoding('binary');
                             
@@ -119,7 +124,8 @@ class Manga {
                                     if (err) {
                                         console.error(err);
                                     } else {
-                                        console.log('Scan ' + i + ' saved!');
+                                        let nowTs = new Date().getTime() / 1000;
+                                        console.log('[' + chapter.chapterIndex + '] Scan ' + i + ' / ' + chapter.scansUrls.length + ' saved! ' + (nowTs - startTs) + ' s');
                                     }
                                     resolve();
                                 });
@@ -128,13 +134,12 @@ class Manga {
                         else {
                             console.error(`Error downloading the scan. Status code: ${res.statusCode}`);
                         }
-    
+                        
                     }).on('error', err => {
                         console.error(`Error downloading scan: ${err}`);
                     });
 
-
-                }, i * this.DELAY);
+                }, this.DELAY);
             })
         }
     }
@@ -142,8 +147,10 @@ class Manga {
     async startDownload() {
         for (let chapter of this.downloadQueue) {
             let currentChapter = await this.getChapterPagesUrls(chapter);
+            let startTs = new Date().getTime() / 1000;
             await this.#scanDownloadPrivate(currentChapter);
-
+            let nowTs = new Date().getTime() / 1000;
+            console.log("In total: " + (nowTs - startTs) + " s");
         }
     }
 
