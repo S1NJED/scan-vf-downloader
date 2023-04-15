@@ -83,7 +83,7 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
             case "show":
                 let queue = "";
                 for (let chapter of currentManga.downloadQueue) {
-                    queue += `[\x1b[33m${chapter.chapterIndex}\x1b[0m]], `
+                    queue += `[\x1b[33m${chapter.chapterIndex}\x1b[0m], `
                 }
                 console.log("DOWNLOAD QUEUE: " + queue + "\n");
                 break;
