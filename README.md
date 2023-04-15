@@ -6,11 +6,20 @@ Download manga scans from the scan-vf website
 🇫🇷 ~ Simple outil en CLI qui permet de télécharger des scans de manga sur le site scan-vf
 
 ### <ins>Installation</ins>
-<ol>
-  <li>Installez <a href="https://nodejs.org/fr/download"> <strong>Node.js</strong> </a></li>
-  <li>Lancer setup.bat</li>
-  <li>Puis lancer start.bat</li>
-</ol>
+
+1. Installez <a href="https://nodejs.org/fr/download"> <strong>Node.js</strong> </a>v18
+2. Créez un projet Node.js 
+   ```sh
+   npm init -y
+   ```
+3. Installez le module `cheerio` et `readline-sync`
+   ``` sh
+   npm i cheerio readline-sync
+   ```
+4. Exécuter le script
+   ```sh
+   node main.js
+   ```
 
 ### <ins>Mangas Disponibles:</ins>
 <ul>
