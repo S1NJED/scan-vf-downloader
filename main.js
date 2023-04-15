@@ -24,11 +24,12 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
     console.log("\n====================================================\n");
     console.log("USAGE: \n \
         - add CHAPTER_INDEX (add chapter to the download queue), \n \
+        - adds START_CHAPTER-END_CHAPTER (add multiple chapter to the queue)\n \
         - remove CHAPTER_INDEX (remove chapter from the download queue), \n \
         - show (show the download queue) \n \
         - download (to start the download)\n");
 
-    let keywords = ["add", "remove", "show", "download"];
+    let keywords = ["add", "adds", "remove", "show", "download"];
     do {
         let userInput = question("> ");
         let userInputArraySplitted = userInput.split(' ');
@@ -36,7 +37,7 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
         let chapterIndexInput = userInputArraySplitted[1] || null;
         
         if (!keywords.includes(keyword)) {
-            console.log("Please make sure to use add, remove or show.\n");
+            console.log("Please make sure to use add, adds, remove or show.\n");
             continue;
         }
         if (!chapterIndexInput && !["show", "download"].includes(keyword)) {
@@ -64,6 +65,36 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
                     }
                 } catch(err) {console.log("Can't find the chapter.\n")}
                 
+                break;
+            
+            case "adds":
+                let arg = chapterIndexInput.split('-');
+                let startChapter = arg[0];
+                let endChapter = arg[1];
+
+                if (startChapter == endChapter) {console.log("The two chapters must be different."); continue;}
+                if (startChapter > endChapter) { console.log("The START_CHAPTER arg must be smaller than the END_CHAPTER arg"); continue; }
+
+                for (let currentChapterIndex = startChapter; currentChapterIndex <= endChapter; currentChapterIndex++) {
+                    try {
+                        let chap = currentManga.chapters.find(chapter => chapter.chapterIndex == currentChapterIndex) || null;
+                        
+                        if (currentManga.downloadQueue.some(chapter => chapter.chapterIndex == currentChapterIndex)) {
+                            console.log("The chapter " + currentChapterIndex + " is already in the queue.\n");
+                            continue;
+                        }
+
+                        currentManga.downloadQueue.push(chap);
+                        if (currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chap.chapterIndex)) {
+                            console.log("Sucessfully added chapter " + currentChapterIndex + "\n");
+                        }
+                        else {
+                            console.log("Couldn't add the chapter " + chapterIndexInput + "\n");
+                        }
+
+                    } catch(err) {console.log("Can't find the chapter " + currentChapterIndex);}
+                }
+
                 break;
 
             case "remove":
