@@ -111,7 +111,7 @@ class Manga {
                     https.get(url, res => {
                         if (res.statusCode === 200) {
                             let startTs = new Date().getTime() / 1000;
-                            
+
                             let imageData = '';
                             res.setEncoding('binary');
                             
@@ -125,7 +125,7 @@ class Manga {
                                         console.error(err);
                                     } else {
                                         let nowTs = new Date().getTime() / 1000;
-                                        console.log('[' + chapter.chapterIndex + '] Scan ' + i + ' / ' + chapter.scansUrls.length + ' saved! ' + (nowTs - startTs) + ' s');
+                                        console.log(`[\x1b[33m${chapter.chapterIndex}\x1b[0m] Scan \x1b[47;30m${i}\x1b[0m / ${chapter.scansUrls.length} saved! \x1b[1m${nowTs - startTs}\x1b[0m s`);
                                     }
                                     resolve();
                                 });
@@ -150,7 +150,7 @@ class Manga {
             let startTs = new Date().getTime() / 1000;
             await this.#scanDownloadPrivate(currentChapter);
             let nowTs = new Date().getTime() / 1000;
-            console.log("In total: " + (nowTs - startTs) + " s");
+            console.log(`[\x1b[32m${chapter.chapterIndex}\x1b[0m] Total: \x1b[1m${nowTs - startTs}\x1b[0m`);
         }
     }
 
