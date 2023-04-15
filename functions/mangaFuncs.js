@@ -10,8 +10,8 @@ class Manga {
         this.mangaThumbnail = "";
 
         const configData = JSON.parse(fs.readFileSync("config.json"));
-        this.DELAY = configData["DELAY"] || 1000; // 1000ms by default
-        this.scansPath = configData["CHAPTER_PATH_DOWNLOAD"] || path.join(__dirname, "MANGAS"); // Path where the /MANGAS folder will be
+        this.DELAY = configData["DELAY"] || 650; // 650ms by default
+        this.scansPath = configData["CHAPTER_PATH_DOWNLOAD"] || "MANGAS"; // Path where the /MANGAS folder will be
         if (!fs.existsSync(this.scansPath)) {fs.mkdirSync(this.scansPath);}
 
         this.chapters = [];
