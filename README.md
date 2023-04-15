@@ -5,6 +5,13 @@ Download manga scans from the scan-vf website
 
 🇫🇷 ~ Simple outil en CLI qui permet de télécharger des scans de manga sur le site scan-vf
 
+### <ins>Installation</ins>
+<ol>
+  <li>Installez <a href="https://nodejs.org/fr/download"> <strong>Node.js</strong> </a></li>
+  <li>Lancer setup.bat</li>
+  <li>Puis lancer start.bat</li>
+</ol>
+
 ### <ins>Mangas Disponibles:</ins>
 <ul>
   <li>Attaque des titans</li>
