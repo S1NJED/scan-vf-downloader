@@ -24,10 +24,10 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
 
     console.log("\n====================================================\n");
     console.log("USAGE: \n \
-        add CHAPTER_INDEX (add chapter to the download queue), \n \
-        remove CHAPTER_INDEX (remove chapter from the download queue), \n \
-        show (show the download queue) \n \
-        download (to start the download)");
+        - add CHAPTER_INDEX (add chapter to the download queue), \n \
+        - remove CHAPTER_INDEX (remove chapter from the download queue), \n \
+        - show (show the download queue) \n \
+        - download (to start the download)\n");
 
     let keywords = ["add", "remove", "show", "download"];
     do {
@@ -51,32 +51,38 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
             case "add":
                 // Already in the queue...
                 if (currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chapterIndexInput)) {
-                    console.log("The chapter " + chapterIndexInput + " is already in the queue.");
+                    console.log("The chapter " + chapterIndexInput + " is already in the queue.\n");
                     continue;
                 }
 
-                currentManga.downloadQueue.push(currentChapter);
-                if (currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chapterIndexInput)) {
-                    console.log("Sucessfully added chapter " + chapterIndexInput);
-                }
-                else {
-                    console.log("Couldn't add the chapter " + chapterIndexInput);
-                }
+                if (currentChapter) {currentManga.downloadQueue.push(currentChapter);}
+                try {
+                    if (currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chapterIndexInput)) {
+                        console.log("Sucessfully added chapter " + chapterIndexInput + "\n");
+                    }
+                    else {
+                        console.log("Couldn't add the chapter " + chapterIndexInput + "\n");
+                    }
+                } catch(err) {console.log("Can't find the chapter.\n")}
+                
                 break;
 
             case "remove":
-                let chapterUrlQueueIndex = currentManga.downloadQueue.findIndex(chapter => chapter.chapterIndex == chapterIndexInput);
-                currentManga.downloadQueue.splice(chapterUrlQueueIndex, 1);
-                if (!currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chapterIndexInput)) {
-                    console.log("Sucessfully removed chapter " + chapterIndexInput);
-                }
-                else {
-                    console.log("Couldn't remove chapter " + chapterIndexInput);
-                }
+                try {
+                    let chapterUrlQueueIndex = currentManga.downloadQueue.findIndex(chapter => chapter.chapterIndex == chapterIndexInput);
+                    currentManga.downloadQueue.splice(chapterUrlQueueIndex, 1);
+                    if (!currentManga.downloadQueue.some(chapter => chapter.chapterIndex == chapterIndexInput)) {
+                        console.log("Sucessfully removed chapter " + chapterIndexInput + "\n");
+                    }
+                    else {
+                        console.log("Couldn't remove chapter " + chapterIndexInput + "\n");
+                    }
+                } catch (err) {console.log("Can't remove the chapter.\n")}
+                
                 break;
 
             case "show":
-                console.log("DOWNLOAD QUEUE: ");
+                console.log("DOWNLOAD QUEUE: "); // TODO: display only chapter index 
                 for (let url of currentManga.downloadQueue) {
                     console.log(url);
                 }
@@ -84,7 +90,12 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
                 break;
 
             case "download":
+
+                if (!currentManga.downloadQueue[0]) { console.log("There is nothing in the queue.\n"); continue; }
+
                 await currentManga.startDownload();
+                console.log("Download finish!");
+                currentManga.downloadQueue = []; // empty the array after download is complete.
                 break;
         }
         continue;

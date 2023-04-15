@@ -12,7 +12,8 @@ class Manga {
         const configData = JSON.parse(fs.readFileSync("config.json"));
         this.DELAY = configData["DELAY"] || 1000; // 1000ms by default
         this.scansPath = configData["CHAPTER_PATH_DOWNLOAD"] || path.join(__dirname, "MANGAS"); // Path where the /MANGAS folder will be
-        
+        if (!fs.existsSync(this.scansPath)) {fs.mkdirSync(this.scansPath);}
+
         this.chapters = [];
         this.chaptersCount = 0;
 
@@ -100,8 +101,6 @@ class Manga {
         if (!fs.existsSync(path.join(this.scansPath, mangaNameFolder))) { fs.mkdirSync(path.join(this.scansPath, mangaNameFolder)) }
         if (!fs.existsSync(path.join(this.scansPath, mangaNameFolder, chapter.chapterIndex))) { fs.mkdirSync(path.join(this.scansPath, mangaNameFolder, chapter.chapterIndex)) }
         
-        
-
         for (let i = 1; i <= chapter.scansUrls.length; i++) {
             
             await new Promise((resolve) => {
@@ -150,7 +149,9 @@ class Manga {
             let startTs = new Date().getTime() / 1000;
             await this.#scanDownloadPrivate(currentChapter);
             let nowTs = new Date().getTime() / 1000;
-            console.log(`[\x1b[32m${chapter.chapterIndex}\x1b[0m] Total: \x1b[1m${(nowTs - startTs).toFixed(2)}\x1b[0m`);
+            let total = (nowTs - startTs).toFixed(2);
+            console.log(`[\x1b[32m${chapter.chapterIndex}\x1b[0m] Total: \x1b[1m${total}\x1b[0m s`);
+            console.log(`[\x1b[32m${chapter.chapterIndex}\x1b[0m] Total without the delay: \x1b[1m${total - ((this.DELAY / 1000) * currentChapter.scansUrls.length)}\x1b[0m\n`);
         }
     }
 
