@@ -11,7 +11,6 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
         formattedMangaName = mangaNameFormatting(mangaName);
 
     } while (!(await isMangaAvailable(formattedMangaName)));
-
     
     let currentManga = new Manga(mangaName);
     console.log("\nFetching chapters of " + mangaName + " manga...");
@@ -82,11 +81,11 @@ const {mangaNameFormatting, getMangaList, isMangaAvailable} = require("./functio
                 break;
 
             case "show":
-                console.log("DOWNLOAD QUEUE: "); // TODO: display only chapter index 
-                for (let url of currentManga.downloadQueue) {
-                    console.log(url);
+                let queue = "";
+                for (let chapter of currentManga.downloadQueue) {
+                    queue += `[\x1b[33m${chapter.chapterIndex}\x1b[0m]], `
                 }
-                console.log("\n");
+                console.log("DOWNLOAD QUEUE: " + queue + "\n");
                 break;
 
             case "download":
